@@ -7,7 +7,7 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-func publish(client mqtt.Client,topic string) {
+func Publish(client mqtt.Client,topic string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for{
 		scanner.Scan()

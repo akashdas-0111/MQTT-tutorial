@@ -43,7 +43,7 @@ func main() {
 	fmt.Println(channels)
 	var t int
 	fmt.Scanf("%d", &t)
-	subscription.sub(client, channels[t])
-	publishing.publish(client, channels[t])
+	subscription.Sub(client, channels[t])
+	publishing.Publish(client, channels[t])
 	client.Disconnect(250)
 }
