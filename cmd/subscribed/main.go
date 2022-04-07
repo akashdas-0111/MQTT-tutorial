@@ -10,6 +10,9 @@ import (
 )
 
 var MessagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
+	if(string(msg.Payload())=="exit"){
+		os.Exit(0)
+	}
 	fmt.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
 }
 var ConnectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
@@ -21,14 +24,12 @@ var ConnectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err
 }
 
 func main() {
-	// var broker = "broker.emqx.io"
-	// var port = 1883
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://127.0.0.1:11883")
-	opts.SetDefaultPublishHandler(MessagePubHandler)
-	opts.OnConnect = ConnectHandler
-	opts.OnConnectionLost = ConnectLostHandler
-	client := mqtt.NewClient(opts)
+	refer := mqtt.NewClientOptions()
+	refer.AddBroker("tcp://127.0.0.1:11883")
+	refer.SetDefaultPublishHandler(MessagePubHandler)
+	refer.OnConnect = ConnectHandler
+	refer.OnConnectionLost = ConnectLostHandler
+	client := mqtt.NewClient(refer)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
