@@ -20,7 +20,7 @@ var ConnectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err
 
 func main() {
 	refer := mqtt.NewClientOptions()
-	refer.AddBroker("tcp://127.0.0.1:11883")
+	refer.AddBroker("tcp://127.0.0.1:9092")
 	refer.OnConnect = ConnectHandler
 	refer.OnConnectionLost = ConnectLostHandler
 	client := mqtt.NewClient(refer)
