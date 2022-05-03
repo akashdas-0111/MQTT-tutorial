@@ -10,8 +10,10 @@ import (
 func main(){
 	conf:=kafka.ReaderConfig{
 		Brokers: []string{"localhost:9092"},
-		Topic: "quickstart-events",
-
+		// GroupID:"two" ,
+		Topic: "testinggroup",
+		Partition: 0,
+		
 	}
 	reader:=kafka.NewReader(conf)
 	for{
