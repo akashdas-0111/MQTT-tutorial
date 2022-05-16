@@ -10,7 +10,7 @@ import (
 
 func main(){
 	 
-	connec, _ := kafka.DialLeader(context.Background(),"tcp","localhost:9092","quickstart-events",0)
+	connec, _ := kafka.DialLeader(context.Background(),"tcp","localhost:9092","testinggrou",0)
 	connec.SetDeadline(time.Now().Add(time.Second*10))
 	for{
 	message,_ := connec.ReadMessage(1e3)
