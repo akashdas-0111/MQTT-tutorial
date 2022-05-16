@@ -3,27 +3,25 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/segmentio/kafka-go"
 )
 
-func main(){
-	 
-	connec, _ := kafka.DialLeader(context.Background(),"tcp","localhost:9092","testinggrou",0)
-	connec.SetDeadline(time.Now().Add(time.Second*10))
-	for{
-	message,_ := connec.ReadMessage(1e3)
-	fmt.Println(string(message.Value))
+func main() {
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers: []string{"localhost:9092"},
+		GroupID: "two",
+		Topic:   "kafkatest",
+		// Partition: 4,
+
+	})
+
+	for {
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+		fmt.Println(string(m.Value))
+		// time.Sleep(10*time.Second)
 	}
-	// batch:=connec.ReadBatch(1e3,1e9)
-	// bytes:=make([]byte,1e6)
-	// for{
-	// 	_,err:=batch.Read(bytes)
-	// 	if err!=nil{
-	// 		break
-	// 	}
-	// 	fmt.Println(string(bytes))
-	// 	fmt.Println()
-	// }
 }
