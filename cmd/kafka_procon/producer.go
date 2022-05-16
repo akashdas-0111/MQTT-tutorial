@@ -9,7 +9,12 @@ import (
 
 	"github.com/segmentio/kafka-go"
 )
-
+type Custom struct {
+	// contains filtered or unexported fields
+}
+func (lb *Custom) Balance(msg kafka.Message, partitions ...int)int{
+	return 0
+}
 func main() {
 	var part int
 	fmt.Println("Enter partition number")

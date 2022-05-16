@@ -5,15 +5,15 @@ import (
 	"context"
 	"fmt"
 	"os"
-
+	"akash-mqtttut/internal/balancer"
 	"github.com/segmentio/kafka-go"
 )
 
 func main() {
-	c:= kafka.NewWriter(kafka.WriterConfig{
+	c := kafka.NewWriter(kafka.WriterConfig{
 		Brokers:  []string{"localhost:9092"},
-		Topic:    "testinggroup",
-		Balancer: &kafka.Murmur2Balancer{},
+		Topic:    "kafkatest",
+		Balancer: &balancer.Custom{},
 	})
 	for {
 		fmt.Println("Enter the message")
@@ -28,7 +28,6 @@ func main() {
 		}
 
 	}
-
 	// val := "1"
 	// for {
 	// 	err := c.WriteMessages(context.Background(), kafka.Message{Value: []byte(val)})
