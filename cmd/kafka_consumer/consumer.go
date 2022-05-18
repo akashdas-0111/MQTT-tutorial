@@ -9,9 +9,10 @@ import (
 
 func main() {
 	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:9092"},
-		GroupID: "two",
-		Topic:   "kafkatest",
+		Brokers:     []string{"localhost:9093"},
+		GroupID:     "two",
+		GroupTopics: []string{"test", "testdemo","test1"},
+		//Topic: "testdemo",
 		// Partition: 4,
 
 	})

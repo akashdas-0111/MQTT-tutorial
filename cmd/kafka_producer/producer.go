@@ -5,16 +5,17 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"akash-mqtttut/internal/balancer"
+
 	"github.com/segmentio/kafka-go"
 )
 
 func main() {
 	c := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"localhost:9092"},
-		Topic:    "kafkatest",
-		Balancer: &balancer.Custom{},
+		Brokers:  []string{"0.0.0.0:9093"},
+		Topic:    "test2",
+		Balancer: &kafka.RoundRobin{},
 	})
+
 	for {
 		fmt.Println("Enter the message")
 		scanner := bufio.NewScanner(os.Stdin)
@@ -22,7 +23,7 @@ func main() {
 		msg := scanner.Text()
 		err := c.WriteMessages(context.Background(), kafka.Message{Value: []byte(msg)})
 		if err != nil {
-			fmt.Println("Message not sent")
+			fmt.Println("Message not sent: ", err)
 		} else {
 			fmt.Println("Message sent successfully")
 		}
