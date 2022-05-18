@@ -35,6 +35,7 @@
          kafka-topics.sh --create --topic <topic name> --replication-factor <value> --partitions <value> --bootstrap-server localhost:9092
   ### MQTT Broker
   #### 1. Web Broker
+   Example- HiveMQ
    Broker: broker.hivemq.com<br>
    Port: 1883
  #### Note:<br>
