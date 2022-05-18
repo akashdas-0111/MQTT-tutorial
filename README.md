@@ -34,7 +34,24 @@
   #### Step 4: Create topic as per requirement
          kafka-topics.sh --create --topic <topic name> --replication-factor <value> --partitions <value> --bootstrap-server localhost:9092
   ### MQTT Broker
-      
+  #### 1. Web Broker
+   Broker: broker.hivemq.com<br>
+   Port: 1883
+ #### Note:<br>
+ Put the broker and port inside the broker variable of publisher and subcriber.<br>
+ There are other web brokers available.
+   
+  #### 2. Docker
+  Example- RabbitMQ
+  #### Step 1: Run the RabbitMQ management
+          docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 rabbitmq:3-management
+  #### Step 2: Inside RabbitMQ container CLI enable MQTT plugin
+          rabbitmq-plugins enable rabbitmq_mqtt
+          
+  #### Note: <br>
+  The management portal will be running on localhost:8080.<br>
+  The broker will be- tcp://127.0.0.1:1883
+        
 ## 2. Code
    1. [Kafka producer](cmd/kafka_producer) <br>
      This Producer can send message to the kafka broker using pre-defined balancers and balancers can also be implemented using custom balancer using different logics.<br>
