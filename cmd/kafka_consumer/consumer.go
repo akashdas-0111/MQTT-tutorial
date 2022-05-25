@@ -3,17 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/segmentio/kafka-go"
 )
 
 func main() {
-
-	connec, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "testinggrou", 0)
-	connec.SetDeadline(time.Now().Add(time.Second * 10))
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers:     []string{"localhost:9093"},
+		GroupID:     "two",
+		GroupTopics: []string{"test", "testdemo", "test1"},
+	})
 	for {
-		message, _ := connec.ReadMessage(1e3)
-		fmt.Println(string(message.Value))
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+		fmt.Println(string(m.Value))
 	}
 }
