@@ -3,20 +3,21 @@ package main
 import (
 	"akash-mqtttut/internal/subscription"
 	"bufio"
+	"context"
 	"fmt"
 	"os"
-	"context"
-	"time"
-	"github.com/segmentio/kafka-go"
+
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/segmentio/kafka-go"
 )
 
 var MessagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-	if(string(msg.Payload())=="exit"){
+	if string(msg.Payload()) == "exit" {
 		os.Exit(0)
 	}
 	fmt.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
-	Kafkaproducer(string(msg.Payload()))
+	kafkaProducer(string(msg.Payload()))
+
 }
 var ConnectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
 	fmt.Println("Connected")
@@ -25,16 +26,26 @@ var ConnectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
 var ConnectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err error) {
 	fmt.Printf("Connect lost: %v\n", err)
 }
-func Kafkaproducer(message string){
-	connec, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "testinggroup", 1)
-	connec.SetDeadline(time.Now().Add(time.Second * 10))
-	connec.WriteMessages(kafka.Message{Value: []byte(message)})
-	fmt.Printf("Published message to Kafka: %s to topic quickstart-events\n",message)
-}
 
+func kafkaProducer(message string) {
+	c := &kafka.Writer{
+		Addr:                   kafka.TCP("localhost:9093"),
+		Topic:                  "akashtest",
+		Balancer:               &kafka.RoundRobin{},
+		AllowAutoTopicCreation: false,
+	}
+	err := c.WriteMessages(context.Background(), kafka.Message{Value: []byte(message)})
+	fmt.Printf("Sending to kafka: %s\n", message)
+	if err != nil {
+		fmt.Println("Message not sent: ", err)
+		panic("")
+	} else {
+		fmt.Println("Message sent successfully")
+	}
+}
 func main() {
 	refer := mqtt.NewClientOptions()
-	refer.AddBroker("tcp://127.0.0.1:1883")
+	refer.AddBroker("localhost:1883")
 	refer.SetDefaultPublishHandler(MessagePubHandler)
 	refer.OnConnect = ConnectHandler
 	refer.OnConnectionLost = ConnectLostHandler
