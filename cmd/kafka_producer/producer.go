@@ -10,11 +10,12 @@ import (
 )
 
 func main() {
-	c := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"0.0.0.0:9093"},
-		Topic:    "test2",
-		Balancer: &kafka.RoundRobin{},
-	})
+	c := &kafka.Writer{
+		Addr:                   kafka.TCP("localhost:9093"),
+		Topic:                  "akashtest",
+		Balancer:               &kafka.RoundRobin{},
+		AllowAutoTopicCreation: false,
+	}
 	if os.Args[1] == "user" {
 		fmt.Println("User Input")
 		for {
@@ -25,6 +26,7 @@ func main() {
 			err := c.WriteMessages(context.Background(), kafka.Message{Value: []byte(msg)})
 			if err != nil {
 				fmt.Println("Message not sent: ", err)
+				panic("")
 			} else {
 				fmt.Println("Message sent successfully")
 			}
